@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
-import debounce from "lodash/debounce"; // Install using `npm install lodash`
 
 const apiUrl =
   "https://api.devharlemwizardsinabox.com/campaign/campaign_school_list/?search=";
@@ -31,7 +30,6 @@ const fetchSchools = async (query = "") => {
   }
 };
 
-// Watch searchQuery to trigger the debounced API call
 watch(
   searchQuery,
   (newQuery) => {
