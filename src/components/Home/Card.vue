@@ -2,21 +2,34 @@
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 
+// Define the API URL
 const apiUrl =
   "https://api.devharlemwizardsinabox.com/campaign/campaign_school_list/?search=";
 
+// Define TypeScript types
+interface School {
+  id: number;
+  school_name: string;
+  logo: string;
+  public_page_url: string;
+}
+
+interface ApiResponse {
+  school_list: School[];
+}
+
 // State variables
-const searchQuery = ref("");
-const schoolList = ref([]);
-const isLoading = ref(false);
-const errorMessage = ref("");
+const searchQuery = ref<string>(""); // Search query string
+const schoolList = ref<School[]>([]); // List of schools
+const isLoading = ref<boolean>(false); // Loading state
+const errorMessage = ref<string>(""); // Error message
 
 // Function to fetch schools from the API
-const fetchSchools = async (query = "") => {
+const fetchSchools = async (query: string = ""): Promise<void> => {
   isLoading.value = true;
   errorMessage.value = "";
   try {
-    const response = await axios.get(apiUrl + query);
+    const response = await axios.get<ApiResponse>(apiUrl + query);
     const data = response.data.school_list;
     schoolList.value = data;
 
@@ -30,9 +43,10 @@ const fetchSchools = async (query = "") => {
   }
 };
 
+// Watch for changes in the search query and fetch schools
 watch(
   searchQuery,
-  (newQuery) => {
+  (newQuery: string) => {
     fetchSchools(newQuery);
   },
   { immediate: true }
@@ -134,7 +148,7 @@ onMounted(() => {
             </a>
           </div>
         </div>
-        <div v-else class="error">Something unexpected happen</div>
+        <div v-else class="error">Something unexpected happened.</div>
       </div>
     </div>
   </div>
